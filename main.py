@@ -66,9 +66,10 @@ class PackageHandler(webapp.RequestHandler):
             url = urls[0]
             link = "http://pypi.python.org/pypi/%s/%s" % (package, release)
 
-            logging.error(url["upload_time"].value)
-            dt = datetime.datetime.strptime(url["upload_time"].value,
-                                            "%Y%m%dT%M:%S:%f")
+            timestamp = url["upload_time"].value[:-3]
+
+            logging.error(timestamp)
+            dt = datetime.datetime.strptime(timestamp, "%Y%m%dT%M:%S")
 
             # Sort by md5?
             updates.append(
@@ -81,7 +82,7 @@ class PackageHandler(webapp.RequestHandler):
                 )
 
         rss = PyRSS2Gen.RSS2(
-            title = "PyPi Version feed for %s" % package,
+            title = "%s PyPi Version feed" % package,
             link = "http://pypi.python.org/pypi/%s" % package,
             description = "The latest releases for package %s" % package,
             lastBuildDate = datetime.datetime.utcnow(),
